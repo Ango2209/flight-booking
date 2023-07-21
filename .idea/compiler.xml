@@ -13,11 +13,13 @@
         <module name="api-gateway" />
         <module name="discovery-server" />
         <module name="user-service" />
+        <module name="flightservice" />
         <module name="notification-service" />
         <module name="booking-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="flight-booking" target="17" />
       <module name="inventory-service" target="17" />
       <module name="product-service" target="17" />
     </bytecodeTargetLevel>
@@ -27,6 +29,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="booking-service" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
+      <module name="flightservice" options="-parameters" />
       <module name="inventory-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
