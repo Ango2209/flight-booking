@@ -1,6 +1,6 @@
 package com.nguyenngo.orderservice.dto;
 
-import com.nguyenngo.orderservice.model.OrderLineItems;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
