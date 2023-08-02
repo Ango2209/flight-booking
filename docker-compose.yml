@@ -41,17 +41,15 @@ services:
       - redis_data:/data
     command: redis-server --appendonly yes
   axonserver:
-    image: axoniq/axonserver
+    image: axoniq/axonserver:latest
     container_name: axonserver
     ports:
-      - "8024:8024"   # Axon Server HTTP Port
+      - "8024:8024"  # Axon Server Admin API port
+      - "8124:8124"  # Axon Server HTTP port
+      - "8224:8224"  # Axon Server gRPC port
     volumes:
-      - axon_data:/data
-    environment:
-      - AXONSERVER_HOSTNAME=axonserver
-    restart: always
-    networks:
-      - my_network
+      - ./axonserver:/axonserver  # Mounts the data volume for persistent storage
+    command: -server -event.axon.axonserver.uploads.enabled=true
   grafana:
     image: grafana/grafana-oss:8.5.2
     container_name: grafana
@@ -74,13 +72,12 @@ services:
       - "9000:9090"
     volumes:
       - ./prometheus:/etc/prometheus
-      - prometheus-data:/prometheus
+      - prometheus_data:/prometheus
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
   ##mongo db
   mongodb-flight:
-    container_name: mongo-flight
+    container_name: mongodb-flight
     image: mongo:latest
-
     ports:
       - "27017:27017"  # Map MongoDB port to the host system
     volumes:
@@ -99,7 +96,6 @@ services:
     ports:
       - "3306:3306"
     restart: unless-stopped
-
   mariadb-user:
     container_name: mariadb-user
     image: mariadb
@@ -149,6 +145,18 @@ services:
       - broker
       - discovery-server
       - api-gateway
+  ## User-Service Docker
+  userservice:
+    container_name: userservice
+    image: nguyenngo2208/userservice:latest
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-user:3306/user-service
+    depends_on:
+      - mariadb-user
+      - discovery-server
+      - api-gateway
   ## Notification-Service Docker Compose Config
   notification-service:
     container_name: notification-service
@@ -161,8 +169,6 @@ services:
       - discovery-server
       - api-gateway
       - booking-service
-
-
   flightservice:
     container_name: flightservice
     image: nguyenngo2208/flightservice:latest
@@ -172,10 +178,9 @@ services:
       - mongodb-flight
       - discovery-server
       - api-gateway
-    ports:
-      - "8000:8000"  # Map the Python service port to the host system
     environment:
       - SPRING_PROFILES_ACTIVE=docker  # Replace with your MongoDB URI
+      - SPRING_DATASOURCE_URL=mongodb://mongodb-flight:27017/flightdb
 volumes:
   redis_data:
     driver: local
@@ -184,8 +189,8 @@ volumes:
   mongodb_data:
     driver: local
   prometheus_data:
-  axon_data:
-  prometheus-data:
+    driver: local
+
   
 
   
