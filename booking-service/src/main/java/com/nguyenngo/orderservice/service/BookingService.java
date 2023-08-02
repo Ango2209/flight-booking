@@ -1,5 +1,8 @@
 package com.nguyenngo.orderservice.service;
 
+import com.google.gson.Gson;
+import com.nguyenngo.orderservice.config.GsonConfig;
+
 import com.nguyenngo.orderservice.dto.BookingRequest;
 import com.nguyenngo.orderservice.dto.OrderRequest;
 import com.nguyenngo.orderservice.dto.TotalInventory;
@@ -18,26 +21,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
+import redis.clients.jedis.Jedis;
+
 
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
-@Service
+
 @RequiredArgsConstructor
 @Transactional
+@Service
 public class BookingService {
     private final FlightInventoryRepository flightInventoryRepository;
     private final ReservationRepository reservationRepository;
     private final CustomerReservationRepository customerReservationRepository;
-    private final WebClient.Builder webClientBuilder;
+    private Jedis jedis=new Jedis();
     private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
     @Autowired
     private KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
+
     @Transactional
     public void placeOrder(BookingRequest bookingRequest) {
-
 
         Flight_Inventory inventory= flightInventoryRepository.findByFlightId(bookingRequest.getFlight_id());
         if (inventory !=null && inventory.getTotal_inventory()>0&&EMAIL_PATTERN.matcher(bookingRequest.getEmail()).matches()){
@@ -48,6 +53,9 @@ public class BookingService {
             customerReservationRepository.save(customerReservation);
                 kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(reservation.getReservation_id()+"",bookingRequest.getEmail()));
                 flightInventoryRepository.decreaseTotalInventory(bookingRequest.getFlight_id());
+            Gson gson= GsonConfig.getInstance();
+            String jsonReservation= gson.toJson(customerReservation);
+            jedis.set(customerReservation.getId()+"",jsonReservation);
 
         }else {
             throw new FlightInventoryNotAvailableException("Flight is not available");
@@ -57,7 +65,7 @@ public class BookingService {
 
     }
 
-    public void getListOfOrder(){
+    public void getListOfOrderById(){
 
     }
 }

@@ -37,3 +37,4 @@ build/
 /mariadb-booking/
 /mariadb-order/
 /mariadb-user/
+/notification-service/src/main/resources/application.properties/

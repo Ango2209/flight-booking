@@ -25,3 +25,130 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+  axonserver:
+    image: axoniq/axonserver:latest
+    container_name: axonserver
+    ports:
+      - "8024:8024"  # Axon Server Admin API port
+      - "8124:8124"  # Axon Server HTTP port
+      - "8224:8224"  # Axon Server gRPC port
+    depends_on:
+      - redis
+    volumes:
+      - axonserver_data:/data
+  ##mongo db
+  mongodb-flight:
+    container_name: mongo-flight
+    image: mongo:latest
+
+    ports:
+      - "27017:27017"  # Map MongoDB port to the host system
+    volumes:
+      - mongodb_data:/data/db  # Mount a volume to persist MongoDB data
+  ## MariaDB Docker Compose Config
+  mariadb-booking:
+    container_name: mariadb-booking
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: password  # Set your desired root password here
+      MYSQL_DATABASE: booking-service  # Optional: Create a specific database during initialization
+      MYSQL_USER: root  # Optional: Create a specific user during initialization
+      MYSQL_PASSWORD: password  # Optional: Set a password for the created user
+    volumes:
+      - ./mariadb-booking:/var/lib/mysql  # Use the correct path for MariaDB data directory
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+
+  mariadb-user:
+    container_name: mariadb-user
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: password  # Set your desired root password here
+      MYSQL_DATABASE: user-service  # Optional: Create a specific database during initialization
+      MYSQL_USER: root  # Optional: Create a specific user during initialization
+      MYSQL_PASSWORD: password  # Optional: Set a password for the created user
+    volumes:
+      - ./mariadb-user:/var/lib/mysql  # Use the correct path for MariaDB data directory
+    ports:
+      - "3307:3307"
+    restart: unless-stopped
+
+    ## Eureka Server
+  discovery-server:
+    image: nguyenngo2208/discovery-server:latest
+    container_name: discovery-server
+    pull_policy: always
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  api-gateway:
+    image: nguyenngo2208/api-gateway:latest
+    container_name: api-gateway
+    pull_policy: always
+    ports:
+      - "8181:8080"
+    expose:
+      - "8181"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY= TRACE
+    depends_on:
+      - discovery-server
+  ## Booking-Service Docker Compose Config
+  booking-service:
+    container_name: booking-service
+    image: nguyenngo2208/booking-service:latest
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-booking:3306/booking-service
+    depends_on:
+      - mariadb-booking
+      - broker
+      - discovery-server
+      - api-gateway
+  ## Notification-Service Docker Compose Config
+  notification-service:
+    container_name: notification-service
+    image: nguyenngo2208/notification-service:latest
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - broker
+      - discovery-server
+      - api-gateway
+      - booking-service
+
+
+  flightservice:
+    container_name: flightservice
+    image: nguyenngo2208/flightservice:latest
+    pull_policy: always
+    depends_on:
+      - axonserver
+      - mongodb-flight
+      - discovery-server
+      - api-gateway
+    ports:
+      - "8000:8000"  # Map the Python service port to the host system
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker  # Replace with your MongoDB URI
+volumes:
+  redis_data:
+    driver: local
+  axonserver_data:
+    driver: local
+  mongodb_data:
+    driver: local
