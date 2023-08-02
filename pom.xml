@@ -20,7 +20,7 @@
         <module>api-gateway</module>
         <module>booking-service</module>
         <module>flightservice</module>
-        <module>user-service</module>
+<!--        <module>user-service</module>-->
         <module>notification-service</module>
     </modules>
     <properties>
