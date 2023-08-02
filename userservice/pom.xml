@@ -3,18 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.programming.techie</groupId>
-        <artifactId>microservices-new</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.nguyenngo</groupId>
-    <artifactId>user-service</artifactId>
+    <groupId>com.hoanganh</groupId>
+    <artifactId>userservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>user-service</name>
-    <description>user-service</description>
+    <name>userservice</name>
+    <description>userservice</description>
     <properties>
         <java.version>17</java.version>
-        <spring-cloud.version>2022.0.3</spring-cloud.version>
     </properties>
     <dependencies>
         <dependency>
@@ -23,19 +23,13 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
@@ -47,14 +41,36 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-            <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
 
     <dependency>
       <groupId>io.micrometer</groupId>
@@ -62,18 +78,8 @@
       <scope>runtime</scope>
     </dependency>
 
+
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
