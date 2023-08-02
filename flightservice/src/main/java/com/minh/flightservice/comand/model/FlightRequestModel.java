@@ -15,7 +15,7 @@ public class FlightRequestModel {
 	private String destination;
 	private String flightNumber;
 	private int capacity;
-	private Set<Seat> seat = new HashSet<Seat>();
+	private Set<Seat> seats = new HashSet<Seat>();
 
 	// Constructors
 
@@ -34,8 +34,9 @@ public class FlightRequestModel {
 		this.destination = destination;
 		this.flightNumber = flightNumber;
 		this.capacity = capacity;
-		this.seat = seat;
+		this.seats = seat;
 	}
+	
 
 	public void setFlightId(String flightId) {
 		this.flightId = flightId;
@@ -90,10 +91,10 @@ public class FlightRequestModel {
 	}
 
 	public Set<Seat> getSeat() {
-		return seat;
+		return seats;
 	}
 
 	public void setSeat(Set<Seat> seat) {
-		this.seat = seat;
+		this.seats = seat;
 	}
 }

@@ -1,0 +1,44 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: 'prometheus server'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['172.22.224.1:9091']
+
+  - job_name: 'actuator-prometheus scrape'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['172.22.224.1:9002']
+
+  - job_name: 'booking_service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['172.22.224.1:8080']
+        labels:
+          application: 'Booking Service Application'
+
+  - job_name: 'flight_service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['172.22.224.1:9001']
+        labels:
+          application: 'Flight Service Application'
+
+  - job_name: 'notification_service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['172.22.224.1:8080']
+        labels:
+          application: 'Notification Service Application'
+
+  - job_name: 'user_service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['172.22.224.1:8080']
+        labels:
+          application: 'User Service Application'

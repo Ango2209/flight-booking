@@ -1,5 +1,6 @@
 package com.minh.flightservice.comand.event;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,9 +23,14 @@ public class FlightEventHandler {
 		Flight flight = new Flight();
 		BeanUtils.copyProperties(event, flight);
 		Set<Seat> seats = event.getSeat();
-		seats.forEach(n->{
-			n.setFlight(flight);
-		});
+		if (seats == null) {
+	        seats = new HashSet<>();
+	    }
+
+	    seats.forEach(n -> {
+	        n.setFlight(flight);
+	    });
+		flight.setSeat(seats);
 		flightRespository.save(flight);
 	}
 

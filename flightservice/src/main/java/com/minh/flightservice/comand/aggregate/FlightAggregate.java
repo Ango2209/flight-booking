@@ -34,7 +34,7 @@ public class FlightAggregate {
     private String destination;
     private String flightNumber;
     private int capacity;
-    private Set<Seat> seat = new HashSet<Seat>();
+    private Set<Seat> seats = new HashSet<Seat>();
 
     // Constructors
 
@@ -53,7 +53,7 @@ public class FlightAggregate {
         this.destination = destination;
         this.flightNumber = flightNumber;
         this.capacity = capacity;
-        this.seat = seat;
+        this.seats = seat;
     }
 
     public void setFlightId(String flightId) {
@@ -108,11 +108,11 @@ public class FlightAggregate {
         this.capacity = capacity;
     }
     public Set<Seat> getSeat() {
-		return seat;
+		return seats;
 	}
 
 	public void setSeat(Set<Seat> seat) {
-		this.seat = seat;
+		this.seats = seat;
 	}
 
  
