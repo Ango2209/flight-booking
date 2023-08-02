@@ -1,20 +1,26 @@
 ---
 version: '3.7'
+networks:
+  my_network:
+    driver: bridge
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
     ports:
       - "2181:2181"
+    networks:
+      - my_network
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-
   broker:
     image: confluentinc/cp-kafka:7.0.1
     container_name: broker
     ports:
       - "9092:9092"
+    networks:
+      - my_network
     depends_on:
       - zookeeper
     environment:
@@ -35,16 +41,41 @@ services:
       - redis_data:/data
     command: redis-server --appendonly yes
   axonserver:
-    image: axoniq/axonserver:latest
+    image: axoniq/axonserver
     container_name: axonserver
     ports:
-      - "8024:8024"  # Axon Server Admin API port
-      - "8124:8124"  # Axon Server HTTP port
-      - "8224:8224"  # Axon Server gRPC port
-    depends_on:
-      - redis
+      - "8024:8024"   # Axon Server HTTP Port
     volumes:
-      - axonserver_data:/data
+      - axon_data:/data
+    environment:
+      - AXONSERVER_HOSTNAME=axonserver
+    restart: always
+    networks:
+      - my_network
+  grafana:
+    image: grafana/grafana-oss:8.5.2
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - my_network
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    depends_on:
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    ports:
+      - "9000:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
   ##mongo db
   mongodb-flight:
     container_name: mongo-flight
@@ -152,3 +183,18 @@ volumes:
     driver: local
   mongodb_data:
     driver: local
+  prometheus_data:
+  axon_data:
+  prometheus-data:
+  
+
+  
+   
+
+
+ 
+            
+         
+         
+ 
+

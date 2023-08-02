@@ -12,14 +12,14 @@ import com.minh.flightservice.comand.data.Seat;
 
 public class CreateFlightComand {
 		@TargetAggregateIdentifier
-		 private String flightId;
+		private String flightId;
 	    private LocalDate departureDate;
 	    private LocalDate arrivalDate;
 	    private String origin;
 	    private String destination;
 	    private String flightNumber;
 	    private int capacity;
-	    private Set<Seat> seat = new HashSet<Seat>();
+	    private Set<Seat> seats = new HashSet<Seat>();
 
 	    // Constructors
 
@@ -38,7 +38,7 @@ public class CreateFlightComand {
 	        this.destination = destination;
 	        this.flightNumber = flightNumber;
 	        this.capacity = capacity;
-	        this.seat = seat;
+	        this.seats = seat;
 	    }
 
 	    public void setFlightId(String flightId) {
@@ -93,11 +93,11 @@ public class CreateFlightComand {
 	        this.capacity = capacity;
 	    }
 	    public Set<Seat> getSeat() {
-			return seat;
+			return seats;
 		}
 
 		public void setSeat(Set<Seat> seat) {
-			this.seat = seat;
+			this.seats = seat;
 		}
 	    
 }
