@@ -83,19 +83,19 @@ services:
     volumes:
       - mongodb_data:/data/db  # Mount a volume to persist MongoDB data
   ## MariaDB Docker Compose Config
-  mariadb-booking:
-    container_name: mariadb-booking
-    image: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: password  # Set your desired root password here
-      MYSQL_DATABASE: booking-service  # Optional: Create a specific database during initialization
-      MYSQL_USER: root  # Optional: Create a specific user during initialization
-      MYSQL_PASSWORD: password  # Optional: Set a password for the created user
-    volumes:
-      - ./mariadb-booking:/var/lib/mysql  # Use the correct path for MariaDB data directory
-    ports:
-      - "3306:3306"
-    restart: unless-stopped
+#  mariadb-booking:
+#    container_name: mariadb-booking
+#    image: mariadb
+#    environment:
+#      MYSQL_ROOT_PASSWORD: password  # Set your desired root password here
+#      MYSQL_DATABASE: booking-service  # Optional: Create a specific database during initialization
+#      MYSQL_USER: root  # Optional: Create a specific user during initialization
+#      MYSQL_PASSWORD: password  # Optional: Set a password for the created user
+#    volumes:
+#      - ./mariadb-booking:/var/lib/mysql  # Use the correct path for MariaDB data directory
+#    ports:
+#      - "3306:3306"
+#    restart: unless-stopped
   mariadb-user:
     container_name: mariadb-user
     image: mariadb
@@ -133,18 +133,18 @@ services:
     depends_on:
       - discovery-server
   ## Booking-Service Docker Compose Config
-  booking-service:
-    container_name: booking-service
-    image: nguyenngo2208/booking-service:latest
-    pull_policy: always
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-booking:3306/booking-service
-    depends_on:
-      - mariadb-booking
-      - broker
-      - discovery-server
-      - api-gateway
+#  booking-service:
+#    container_name: booking-service
+#    image: nguyenngo2208/booking-service:latest
+#    pull_policy: always
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-booking:3306/booking-service
+#    depends_on:
+#      - mariadb-booking
+#      - broker
+#      - discovery-server
+#      - api-gateway
   ## User-Service Docker
   userservice:
     container_name: userservice
@@ -158,17 +158,17 @@ services:
       - discovery-server
       - api-gateway
   ## Notification-Service Docker Compose Config
-  notification-service:
-    container_name: notification-service
-    image: nguyenngo2208/notification-service:latest
-    pull_policy: always
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - broker
-      - discovery-server
-      - api-gateway
-      - booking-service
+#  notification-service:
+#    container_name: notification-service
+#    image: nguyenngo2208/notification-service:latest
+#    pull_policy: always
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    depends_on:
+#      - broker
+#      - discovery-server
+#      - api-gateway
+#      - booking-service
   flightservice:
     container_name: flightservice
     image: nguyenngo2208/flightservice:latest
