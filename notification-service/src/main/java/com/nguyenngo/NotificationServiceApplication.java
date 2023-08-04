@@ -20,7 +20,7 @@ public class NotificationServiceApplication {
     public void handleNotification(OrderPlacedEvent event){
         String toEmail= event.getEmail();
         if ( toEmail!=null &&!toEmail.isEmpty()){
-            emailSenderService.sendEmail("20115331.ngo@student.iuh.edu.vn", "Test email","email ok");
+            emailSenderService.sendEmail("ndha15112002@gmail.com", "Test email","Bạn đã đặt vé thành công");
             log.info("Received Notification for Order- {}",event.getOrderNumber());
         }
        // send out an email notification
