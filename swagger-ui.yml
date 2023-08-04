@@ -1,0 +1,241 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: FlightBooking
+  description: API for flight booking
+servers:
+  - url: "http://localhost:8181"
+paths:
+  /api/v1/flights:
+    post:
+      summary: addFlight
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlightRequestModel'
+      responses:
+        '200':
+          description: added flight
+    put:
+      summary: updateFlight
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlightRequestModel'
+      responses:
+        '200':
+          description: updated flight
+  /api/v1/flights/{flightID}:
+    delete:
+      summary: deleteFlight
+      parameters:
+        - name: flightID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: deleted flight
+  /api/v1/auth/register:
+    post:
+      summary: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: register successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+  /api/v1/bookings:
+    post:
+      summary: placeOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+      responses:
+        '201':
+          description: Order Placed Successfully
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/v1/auth/authenticate:
+    post:
+      summary: authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationRequest'
+      responses:
+        '200':
+          description: authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+  /api/v1/flights/{from}/{to}/{date}:
+    get:
+      summary: Search flights by origin, destination, and date
+      parameters:
+        - name: from
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: to
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlightResponseModel'
+  /api/v1/flights/only/{from}/{to}/{date}:
+    get:
+      summary: Search only one flight by origin, destination, and date
+      parameters:
+        - name: from
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: to
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlightResponseModel'
+  /api/v1/flights/{id}:
+    get:
+      summary: Get flight details by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightResponseModel'
+components:
+  schemas:
+    FlightRequestModel:
+      type: object
+      properties:
+        flightId:
+          type: string
+        departureDate:
+          type: string
+          format: date
+        arrivalDate:
+          type: string
+          format: date
+        origin:
+          type: string
+        destination:
+          type: string
+        flightNumber:
+          type: string
+        capacity:
+          type: integer
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    AuthenticationRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    AuthenticationResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    BookingRequest:
+      type: object
+      properties:
+        flight_id:
+          type: integer
+        name:
+          type: string
+        CCCD:
+          type: string
+        email:
+          type: string
+    FlightResponseModel:
+      type: object
+      properties:
+        flightId:
+          type: string
+        departureDate:
+          type: string
+          format: date
+        arrivalDate:
+          type: string
+          format: date
+        origin:
+          type: string
+        destination:
+          type: string
+        flightNumber:
+          type: string
+        capacity:
+          type: string

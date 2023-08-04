@@ -74,6 +74,7 @@ services:
       - ./prometheus:/etc/prometheus
       - prometheus_data:/prometheus
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+
   ##mongo db
   mongodb-flight:
     container_name: mongodb-flight
@@ -82,7 +83,7 @@ services:
       - "27017:27017"  # Map MongoDB port to the host system
     volumes:
       - mongodb_data:/data/db  # Mount a volume to persist MongoDB data
-  ## MariaDB Docker Compose Config
+  # MariaDB Docker Compose Config
   mariadb-booking:
     container_name: mariadb-booking
     image: mariadb
@@ -132,7 +133,7 @@ services:
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY= TRACE
     depends_on:
       - discovery-server
-  ## Booking-Service Docker Compose Config
+  # Booking-Service Docker Compose Config
   booking-service:
     container_name: booking-service
     image: nguyenngo2208/booking-service:latest
@@ -145,7 +146,7 @@ services:
       - broker
       - discovery-server
       - api-gateway
-  ## User-Service Docker
+  # User-Service Docker
   userservice:
     container_name: userservice
     image: nguyenngo2208/userservice:latest
@@ -157,7 +158,7 @@ services:
       - mariadb-user
       - discovery-server
       - api-gateway
-  ## Notification-Service Docker Compose Config
+  # Notification-Service Docker Compose Config
   notification-service:
     container_name: notification-service
     image: nguyenngo2208/notification-service:latest
@@ -168,7 +169,6 @@ services:
       - broker
       - discovery-server
       - api-gateway
-      - booking-service
   flightservice:
     container_name: flightservice
     image: nguyenngo2208/flightservice:latest
@@ -190,7 +190,6 @@ volumes:
     driver: local
   prometheus_data:
     driver: local
-
   
 
   

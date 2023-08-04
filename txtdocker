@@ -1,5 +1,12 @@
-
-  ## MariaDB Docker Compose Config
+ ##mongo db
+  mongodb-flight:
+    container_name: mongodb-flight
+    image: mongo:latest
+    ports:
+      - "27017:27017"  # Map MongoDB port to the host system
+    volumes:
+      - mongodb_data:/data/db  # Mount a volume to persist MongoDB data
+  # MariaDB Docker Compose Config
   mariadb-booking:
     container_name: mariadb-booking
     image: mariadb
@@ -13,7 +20,6 @@
     ports:
       - "3306:3306"
     restart: unless-stopped
-
   mariadb-user:
     container_name: mariadb-user
     image: mariadb
@@ -30,13 +36,13 @@
 
     ## Eureka Server
   discovery-server:
-      image: nguyenngo2208/discovery-server:latest
-      container_name: discovery-server
-      pull_policy: always
-      ports:
-        - "8761:8761"
-      environment:
-        - SPRING_PROFILES_ACTIVE=docker
+    image: nguyenngo2208/discovery-server:latest
+    container_name: discovery-server
+    pull_policy: always
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
   api-gateway:
     image: nguyenngo2208/api-gateway:latest
     container_name: api-gateway
@@ -50,7 +56,7 @@
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY= TRACE
     depends_on:
       - discovery-server
-  ## Booking-Service Docker Compose Config
+  # Booking-Service Docker Compose Config
   booking-service:
     container_name: booking-service
     image: nguyenngo2208/booking-service:latest
@@ -63,7 +69,19 @@
       - broker
       - discovery-server
       - api-gateway
-  ## Notification-Service Docker Compose Config
+  # User-Service Docker
+  userservice:
+    container_name: userservice
+    image: nguyenngo2208/userservice:latest
+    pull_policy: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-user:3306/user-service
+    depends_on:
+      - mariadb-user
+      - discovery-server
+      - api-gateway
+  # Notification-Service Docker Compose Config
   notification-service:
     container_name: notification-service
     image: nguyenngo2208/notification-service:latest
@@ -74,4 +92,24 @@
       - broker
       - discovery-server
       - api-gateway
-      - booking-service
+  flightservice:
+    container_name: flightservice
+    image: nguyenngo2208/flightservice:latest
+    pull_policy: always
+    depends_on:
+      - axonserver
+      - mongodb-flight
+      - discovery-server
+      - api-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker  # Replace with your MongoDB URI
+      - SPRING_DATASOURCE_URL=mongodb://mongodb-flight:27017/flightdb
+volumes:
+  redis_data:
+    driver: local
+  axonserver_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  prometheus_data:
+    driver: local
