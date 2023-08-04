@@ -29,6 +29,8 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ROLE_USER)
                 .build();
+        if(userRepository.findByUserName(request.getUserName()).isPresent())
+            return AuthenticationResponse.builder().token("username is exists").build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
