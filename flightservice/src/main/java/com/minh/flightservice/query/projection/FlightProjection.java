@@ -25,6 +25,7 @@ public class FlightProjection {
 
 	@QueryHandler
 	public List<FlightResponeModel> handle(SearchFlight searchFlight) {
+		System.out.printf(searchFlight.getDestination());
 		List<Flight> flightList = flightRespository.findByDateAndDestinationAndOrigin(searchFlight.getDepartureDate(),
 				searchFlight.getDestination(), searchFlight.getOrigin());
 		System.out.println(flightList.get(0).getSeat().size());

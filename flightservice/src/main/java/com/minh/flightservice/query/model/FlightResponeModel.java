@@ -34,7 +34,6 @@ public class FlightResponeModel {
 		this.destination = destination;
 		this.flightNumber = flightNumber;
 		this.capacity = capacity;
-
 		this.seats = seat;
 	}
 
