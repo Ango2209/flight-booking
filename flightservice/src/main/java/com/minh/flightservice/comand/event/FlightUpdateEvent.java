@@ -25,7 +25,7 @@ public class FlightUpdateEvent {
 	    }
 
 	    public FlightUpdateEvent(String flightId, LocalDate departureDate, LocalDate arrivalDate, String origin, String destination,
-	            String flightNumber, int capacity, int availableSeats, Set<Seat> seat) {
+	            String flightNumber, int capacity, int availableSeats, Set<Seat> seats) {
 	        super();
 	        this.flightId = flightId;
 	        this.departureDate = departureDate;
@@ -34,7 +34,7 @@ public class FlightUpdateEvent {
 	        this.destination = destination;
 	        this.flightNumber = flightNumber;
 	        this.capacity = capacity;
-	        this.seats = seat;
+	        this.seats = seats;
 	    }
 
 	
@@ -93,12 +93,12 @@ public class FlightUpdateEvent {
 	    public void setCapacity(int capacity) {
 	        this.capacity = capacity;
 	    }
-	    public Set<Seat> getSeat() {
+	    public Set<Seat> getSeats() {
 			return seats;
 		}
 
-		public void setSeat(Set<Seat> seat) {
-			this.seats = seat;
+		public void setSeats(Set<Seat> seats) {
+			this.seats = seats;
 		}
 	
 }

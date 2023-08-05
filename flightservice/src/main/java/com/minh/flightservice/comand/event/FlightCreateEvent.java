@@ -15,7 +15,7 @@ public class FlightCreateEvent {
 	    private String destination;
 	    private String flightNumber;
 	    private int capacity;
-	    private Set<Seat> seats = new HashSet<Seat>();
+	    private Set<Seat> seat = new HashSet<Seat>();
 
 	    // Constructors
 
@@ -25,7 +25,7 @@ public class FlightCreateEvent {
 	    }
 
 	    public FlightCreateEvent(String flightId, LocalDate departureDate, LocalDate arrivalDate, String origin, String destination,
-	            String flightNumber, int capacity, int availableSeats, Set<Seat> seat) {
+	            String flightNumber, int capacity, int availableSeats, Set<Seat> seats) {
 	        super();
 	        this.flightId = flightId;
 	        this.departureDate = departureDate;
@@ -34,12 +34,12 @@ public class FlightCreateEvent {
 	        this.destination = destination;
 	        this.flightNumber = flightNumber;
 	        this.capacity = capacity;
-	        this.seats = seat;
+	        this.seat = seats;
 	    }
 
 	    public FlightCreateEvent() {
 			// TODO Auto-generated constructor stub
-	    	this.seats = new HashSet<>();
+	    	this.seat = new HashSet<>();
 		}
 
 		public void setFlightId(String flightId) {
@@ -94,10 +94,10 @@ public class FlightCreateEvent {
 	        this.capacity = capacity;
 	    }
 	    public Set<Seat> getSeat() {
-			return seats;
+			return seat;
 		}
 
 		public void setSeat(Set<Seat> seat) {
-			this.seats = seat;
+			this.seat = seat;
 		}
 }

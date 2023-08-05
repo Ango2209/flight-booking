@@ -7,6 +7,7 @@ import java.util.Set;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import com.minh.flightservice.comand.data.Flight;
@@ -17,10 +18,13 @@ import com.minh.flightservice.comand.data.Seat;
 public class FlightEventHandler {
 	@Autowired
 	private FlightRespository flightRespository;
+	
+	@Autowired MongoTemplate mongoTemplate;
 
 	@EventHandler
 	public void on(FlightCreateEvent event) {
 		Flight flight = new Flight();
+		System.out.println(event.getSeat());
 		BeanUtils.copyProperties(event, flight);
 		Set<Seat> seats = event.getSeat();
 		if (seats == null) {
@@ -31,7 +35,7 @@ public class FlightEventHandler {
 	        n.setFlight(flight);
 	    });
 		flight.setSeat(seats);
-		flightRespository.save(flight);
+		mongoTemplate.save(flight);
 	}
 
 	@EventHandler
@@ -46,7 +50,7 @@ public class FlightEventHandler {
 		    flight.setFlightId(event.getFlightId());
 		    flight.setFlightNumber(event.getFlightNumber());
 		    flight.setOrigin(event.getOrigin());
-		    flight.setSeat(event.getSeat());
+		    flight.setSeat(event.getSeats());
 		    flightRespository.save(flight);
 		} else {
 		    // Xử lý trường hợp không tìm thấy chuyến bay (flight) bằng notify service

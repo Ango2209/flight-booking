@@ -25,14 +25,16 @@ public class FlightQueryController {
 	private QueryGateway queryGateway;
 	@GetMapping("/{from}/{to}/{date}")
 	public List<FlightResponeModel> search(@PathVariable String from,@PathVariable String to, @PathVariable LocalDate date) {
+		System.out.println(date);
 		SearchFlight searchFlight=new SearchFlight(date, from, to);
 		List<FlightResponeModel> flightResponeModel=queryGateway.query(searchFlight,ResponseTypes.multipleInstancesOf(FlightResponeModel.class)).join();
 		return flightResponeModel;
 	}
 	@GetMapping("/only/{from}/{to}/{date}")
-	public List<FlightResponeModel> searchOneFlight(@PathVariable String from,@PathVariable String to, @PathVariable LocalDate date) {
+	public FlightResponeModel searchOneFlight(@PathVariable String from,@PathVariable String to, @PathVariable LocalDate date) {
+		System.out.println(date);
 		SearchOneFlight searchOneFlight=new SearchOneFlight(date, from, to);
-		List<FlightResponeModel> flightResponeModel=queryGateway.query(searchOneFlight,ResponseTypes.multipleInstancesOf(FlightResponeModel.class)).join();
+		FlightResponeModel flightResponeModel=queryGateway.query(searchOneFlight,ResponseTypes.instanceOf(FlightResponeModel.class)).join();
 		return flightResponeModel;
 	}
 	@GetMapping("/{id}")

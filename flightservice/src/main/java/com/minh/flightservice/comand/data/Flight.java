@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -29,7 +31,8 @@ public class Flight implements Serializable {
     private String flightNumber;
     private int capacity;
     @JsonManagedReference
-    private Set<Seat> seats = new HashSet<Seat>();
+    @Field("seat")
+    private Set<Seat> seat = new HashSet<Seat>();
 
     // Constructors
 
@@ -40,7 +43,7 @@ public class Flight implements Serializable {
 
     public Flight(String flightId, LocalDate departureDate, LocalDate arrivalDate, String origin, String destination,
             String flightNumber, int capacity, int availableSeats, Set<Seat> seat) {
-        super();
+      
         this.flightId = flightId;
         this.departureDate = departureDate;
         this.arrivalDate = arrivalDate;
@@ -48,7 +51,7 @@ public class Flight implements Serializable {
         this.destination = destination;
         this.flightNumber = flightNumber;
         this.capacity = capacity;
-        this.seats = seat;
+        this.seat = seat;
     }
 
     public void setFlightId(String flightId) {
@@ -104,11 +107,11 @@ public class Flight implements Serializable {
     }
 
     public Set<Seat> getSeat() {
-        return seats;
+        return seat;
     }
 
-    public void setSeat(Set<Seat> seat) {
-        this.seats = seat;
+    public void setSeat(Set<Seat> seats) {
+        this.seat = seats;
     }
 
     public Flight() {

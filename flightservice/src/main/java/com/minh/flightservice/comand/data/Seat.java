@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 
-@Document(collection = "seats")
+@Document
 public class Seat implements Serializable{
 	/**
 	 * 

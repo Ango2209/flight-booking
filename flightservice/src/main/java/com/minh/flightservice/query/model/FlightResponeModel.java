@@ -15,7 +15,7 @@ public class FlightResponeModel {
 	private String destination;
 	private String flightNumber;
 	private int capacity;
-	private Set<Seat> seats = new HashSet<Seat>();
+	private Set<Seat> seat = new HashSet<Seat>();
 
 	// Constructors
 
@@ -26,7 +26,6 @@ public class FlightResponeModel {
 
 	public FlightResponeModel(String flightId, LocalDate departureDate, LocalDate arrivalDate, String origin, String destination,
 			String flightNumber, int capacity, Set<Seat> seat) {
-		super();
 		this.flightId = flightId;
 		this.departureDate = departureDate;
 		this.arrivalDate = arrivalDate;
@@ -34,7 +33,7 @@ public class FlightResponeModel {
 		this.destination = destination;
 		this.flightNumber = flightNumber;
 		this.capacity = capacity;
-		this.seats = seat;
+		this.seat = seat;
 	}
 
 	public FlightResponeModel() {
@@ -94,10 +93,10 @@ public class FlightResponeModel {
 	}
 
 	public Set<Seat> getSeat() {
-		return seats;
+		return seat;
 	}
 
 	public void setSeat(Set<Seat> seat) {
-		this.seats = seat;
+		this.seat = seat;
 	}
 }

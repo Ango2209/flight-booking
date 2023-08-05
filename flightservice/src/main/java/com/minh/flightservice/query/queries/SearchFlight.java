@@ -18,7 +18,7 @@ public class SearchFlight {
 
 
 	public SearchFlight(LocalDate departureDate, String origin, String destination) {
-		super();
+		
 		this.departureDate = departureDate;
 		this.origin = origin;
 		this.destination= destination;

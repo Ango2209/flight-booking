@@ -147,7 +147,7 @@ public class FlightAggregate {
 		this.destination=event.getDestination();
 		this.flightId=event.getFlightId();
 		this.flightNumber=event.getFlightNumber();
-		this.setSeat(event.getSeat());
+		this.seats=(event.getSeat());
 	}
 	@EventSourcingHandler
 	public void on(FlightUpdateEvent event) {
@@ -158,7 +158,7 @@ public class FlightAggregate {
 		this.destination=event.getDestination();
 		this.flightId=event.getFlightId();
 		this.flightNumber=event.getFlightNumber();
-		this.setSeat(event.getSeat());
+		this.seats=(event.getSeats());
 	}
 	@EventSourcingHandler
 	public void on(FlightDeleteEvent event) {
