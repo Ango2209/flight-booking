@@ -95,7 +95,7 @@ services:
     volumes:
       - ./mariadb-booking:/var/lib/mysql  # Use the correct path for MariaDB data directory
     ports:
-      - "3306:3306"
+      - "3308:3306"
     restart: unless-stopped
   mariadb-user:
     container_name: mariadb-user
@@ -138,6 +138,10 @@ services:
     container_name: booking-service
     image: nguyenngo2208/booking-service:latest
     pull_policy: always
+    ports:
+      - "8111:8081"
+    expose:
+      - "8111"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-booking:3306/booking-service
@@ -151,6 +155,10 @@ services:
     container_name: userservice
     image: nguyenngo2208/userservice:latest
     pull_policy: always
+    ports:
+      - "8184:8084"
+    expose:
+      - "8184"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-user:3306/user-service
@@ -163,6 +171,10 @@ services:
     container_name: notification-service
     image: nguyenngo2208/notification-service:latest
     pull_policy: always
+    ports:
+      - "8183:8083"
+    expose:
+      - "8183"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
@@ -173,6 +185,10 @@ services:
     container_name: flightservice
     image: nguyenngo2208/flightservice:latest
     pull_policy: always
+    ports:
+      - "8182:8082"
+    expose:
+      - "8182"
     depends_on:
       - axonserver
       - mongodb-flight
