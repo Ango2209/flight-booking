@@ -1,7 +1,6 @@
 package com.minh.flightservice.query.projection;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +8,8 @@ import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.minh.flightservice.comand.data.Flight;
@@ -23,20 +24,36 @@ public class FlightProjection {
 
 	@Autowired
 	private FlightRespository flightRespository;
+	@Autowired
+	private MongoTemplate mongoTemplate;
+	
 	
 	
 
 	@QueryHandler
 	public List<FlightResponeModel> handle(SearchFlight searchFlight) {
-		List<Flight> flightList = flightRespository.findByDateAndDestinationAndOrigin(searchFlight.getDepartureDate(),
-				searchFlight.getDestination(), searchFlight.getOrigin());
+		//List<Flight> flightList = flightRespository.findByDateAndDestinationAndOrigin(searchFlight.getDepartureDate(),
+				
+		Query query = new Query();
 		
-		List<FlightResponeModel> responseModelList = flightList.stream().map(flight -> {
-			FlightResponeModel responseModel = new FlightResponeModel();
-			BeanUtils.copyProperties(flight, responseModel);
-			return responseModel;
-		}).collect(Collectors.toList());
-		return responseModelList;
+		query.addCriteria(Criteria.where("departureDate").is(searchFlight.getDepartureDate()));
+	    query.addCriteria(Criteria.where("destination").is(searchFlight.getDestination()));
+	    query.addCriteria(Criteria.where("origin").is(searchFlight.getOrigin()));
+		List<Flight> flightList=mongoTemplate.find(query, Flight.class);
+		List<FlightResponeModel> flightResponeModels=new ArrayList<FlightResponeModel>();
+		flightList.forEach(n->{
+			FlightResponeModel flightResponeModel=new FlightResponeModel();
+			flightResponeModel.setArrivalDate(n.getArrivalDate());
+			flightResponeModel.setCapacity(n.getCapacity());
+			flightResponeModel.setDepartureDate(n.getDepartureDate());
+			flightResponeModel.setDestination(n.getDestination());
+			flightResponeModel.setFlightId(n.getFlightId());
+			flightResponeModel.setFlightNumber(n.getFlightNumber());
+			flightResponeModel.setOrigin(n.getOrigin());
+			flightResponeModel.setSeat(n.getSeat());
+			flightResponeModels.add(flightResponeModel);
+		});
+		return flightResponeModels;
 
 	}
 	@QueryHandler

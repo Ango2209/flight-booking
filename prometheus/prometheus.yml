@@ -13,14 +13,14 @@ scrape_configs:
   - job_name: 'booking_service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['192.168.2.75:8111']
+      - targets: ['localhost:8111']
         labels:
           application: 'Booking Service Application'
 
   - job_name: 'flight_service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['192.168.2.75:8182']
+      - targets: ['192.168.2.75:8082']
         labels:
           application: 'Flight Service Application'
 
@@ -34,7 +34,7 @@ scrape_configs:
   - job_name: 'user_service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['192.168.2.75:8184']
+      - targets: ['localhost:8084']
         labels:
           application: 'User Service Application'
   - job_name: 'dicovery-service'
@@ -46,7 +46,7 @@ scrape_configs:
   - job_name: 'api-gateway'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['192.168.2.75:8181']
+      - targets: ['localhost:8081']
         labels:
           application: 'api-gateway Service Application'
   - job_name: 'axonserver'
